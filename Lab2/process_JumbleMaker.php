@@ -19,9 +19,10 @@
         function valiateWord($data, $fieldName)
         {
             global $errorCount;
+
             if (empty($data))
             {
-                displayError($fieldName, "This field is required")
+                displayError($fieldName, "This field is required");
                 $retval = "";
             }
             else
@@ -50,6 +51,17 @@
         $words[] = valiateWord($_POST['Word2'], "Word 2");
         $words[] = valiateWord($_POST['Word3'], "Word 3");
         $words[] = valiateWord($_POST['Word4'], "Word 4");
+
+        if ($errorCount > 0)
+        {
+            echo "please use the \"Back\" button to re-enter data.<br />\n";
+        }
+        else
+        {
+            $wordnum = 0;
+            foreach($words as $word)
+                echo "Word " . ++$wordnum . ": $word<br />\n";
+        }
 
     ?>
     
