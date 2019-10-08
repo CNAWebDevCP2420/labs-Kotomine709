@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html> 
 
-    <title>Player List</title>
+    <title>Bug Report</title>
 
     <body>
-        <h1>Player List</h1>
+        <h1>Bug Report</h1>
 
         <?php
             $fileName = addslashes($_POST["number"]);
@@ -12,13 +12,14 @@
             $productVersion = addslashes($_POST["version"]);
             $productHardware = addslashes($_POST["hardware"]);
 
-            $bugReport = fopen("BugReports/" . $fileName . ".txt", "ab");
+            //Whats the point of fopen() and dclose()??? I just used file_put_contents()??
+            //$bugReport = fopen("BugReports/" . $fileName . ".txt", "ab");
 
             
 
-            fwrite($bugReport, $productName . "\n" . $productVersion . "\n" . $productHardware . "\n");
+            file_put_contents("BugReports/" . $fileName . ".txt", $productName . "\n" . $productVersion . "\n" . $productHardware . "\n");
 
-            echo "Report has been made. <p><a href='bugReports.html'>Return to home page.</a></p>";
+            echo "Report has been created/modified. <p><a href='bugReports.html'>Return to home page.</a></p>";
         
         ?>
 
