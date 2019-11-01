@@ -8,53 +8,60 @@
     }
     else
     {
-        $DBConnect = @mysql_connect("localhost", "root", "");
+        $DBConnect = @mysqli_connect("localhost", "root", "");
         if($DBConnect === false)
         {
-            echo "<p>Unable to connect to the database server</p>" . "<p>Error code " . mysql_errno() . ": " . mysql_error() . "</p>";
+            echo "<p>Unable to connect to the database server</p>" . "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>";
         }
         else
         {
             $DBName = "guestbook";
-            if(!@mysql_select_db($DBName, $DBConnect))
+            if(!@mysqli_select_db($DBName, $DBConnect))
             {
                 $SQLString = "CREATE DATABASE $DBName";
-                $queryResult = mysql_query($SQLString, $DBConnect);
+                $queryResult = mysqli_execute($SQLString, $DBConnect);
 
                 if($queryResult === false)                
-                    echo "<p>Unable to execute the query.</p>" . "<p>Error code " . mysql_errno() . ": " . mysql_error() . "</p>";
+                {
+                    echo "<p>Unable to execute the query.</p>" . "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>";
+                    exit();
+                }
                 else                
+                {
                     echo "You are the first visitor!";
-                
+                    mysqli_select_db($DBName, $DBConnect);
+                }
             }
-            mysql_select_db($DBName, $DBConnect);
+            
 
             $TableName = "visitors";
             $SQLString = "SHOW TABLES LIKE '$TableName'";
-            $queryResult = @mysql_query($SQLString, $DBConnect);
+            $queryResult = @mysqli_execute($SQLString, $DBConnect);
 
-            if(mysql_num_rows($queryResult) == 0)
+            if(mysqli_num_rows($queryResult) == 0)
             {
                 $SQLString = "CREATE NEW TABLE $TableName (countID SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY, last_name VARCHAR(40), first_name VARCHAR(40))";
-                $queryResult = @mysql_query($SQLString, $DBConnect);
+                $queryResult = @mysqli_execute($SQLString, $DBConnect);
                 if($queryResult === false)
                 {
-                    echo "<p>Unable to create table</p>" . "<p>Error code " . mysql_errno() . ": " . mysql_error() . "</p>";
+                    echo "<p>Unable to create table</p>" . "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>";
+                    exit();
                 }
 
                 $LastName = stripslashes($_POST['last_name']);
                 $FirstName = stripslashes($_POST['first_name']);
-                $SQLString = "INSERT INTO $TableName VALUES(NULL< '$LastName', '$FirstName')";
-                $queryResult = @mysql_query($SQLString, $DBConnect);
+                $SQLString = "INSERT INTO $TableName VALUES(NULL, '$LastName', '$FirstName')";
+                $queryResult = @mysqli_execute($SQLString, $DBConnect);
 
                 if($queryResult == false)
                 {
-                    echo "<p>Unable to execute the query.</p>" . "<p>Error code " . mysql_errno() . ": " . mysql_error() . "</p>";
+                    echo "<p>Unable to execute the query.</p>" . "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>";
+                    exit();
                 }
                 else
                     echo "Thanks for signing the guestbook.";
             }
-            mysql_close($DBConnect);
+            mysqli_close($DBConnect);
         }
     }
 
