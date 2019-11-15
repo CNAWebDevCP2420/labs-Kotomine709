@@ -14,6 +14,8 @@
         $InternID = -1;
     }
 
+    $DBConnect = @mysqli_connect("localhost", "root", "");
+
     $errors = 0;
     if($DBConnect === false)
     {
@@ -24,7 +26,7 @@
     else
     {
         $DBName = "internships";
-        $result = @mysqli_select_db($DBName, $DBConnect);
+        $result = @mysqli_select_db($DBConnect, $DBName);
         if($result === false)
         {
             echo "<p>Unable to connect to database</p>";
@@ -36,9 +38,9 @@
     $TableName = "interns";
     if($errors == 0)
     {
-        $SQLString = "SELECT * FROM $TableName WHERE internID = '$InternID' ";
+        $SQLString = "SELECT * FROM $TableName WHERE internID = $InternID";
 
-        $QueryResult = @mysqli_query($DBConnect, $SQLString);
+        $QueryResult = mysqli_query($DBConnect, $SQLString);
 
         if($QueryResult === false)
         {
@@ -73,7 +75,7 @@
 
     $QueryResult = @mysqli_query($DBConnect, $SQLString);
 
-    if(mysqli_num_rows($QueryResult) > 0)
+    if(mysqli_num_rows($QueryResult) > 0) // (result != 0) && (result != NULL)
     {
         $Row = mysqli_fetch_row($QueryResult);
         $ApprovedOpportunities = $Row[0];
@@ -86,13 +88,13 @@
     
     $QueryResult = @mysqli_query($DBConnect, $SQLString);
 
-    if(mysqli_num_rows($queryResult) > 0)
+    if(mysqli_num_rows($QueryResult) > 0)
     {
-        while (($Row = mysqli_fetch_row($queryResult)) !== FALSE)
+        while (($Row = mysqli_fetch_row($QueryResult)) !== FALSE)
         {
             $SelectedOpportunities[] = $Row[0];
         }
-        mysqli_free_result($queryResult);
+        mysqli_free_result($QueryResult);
     }
 
     $AssignedOpportunities = array();
@@ -101,26 +103,26 @@
     
     $QueryResult = @mysqli_query($DBConnect, $SQLString);
 
-    if(mysqli_num_rows($queryResult) > 0)
+    if(mysqli_num_rows($QueryResult) > 0)
     {
-        while(($Row = mysqli_fetch_row($queryResult)) !== FALSE)
+        while(($Row = mysqli_fetch_row($QueryResult)) !== FALSE)
         {
             $AssignedOpportunities = $Row[0];
         }
-        mysqli_free_result($queryResult);
+        mysqli_free_result($QueryResult);
     }
 
     $TableName = "opportunities";
     $Opportunities = array();
-    $SQLString = "SELECT opportunityID, company, city, start_date, end_date, position, description FROM $TableName ";
+    $SQLString = "SELECT opportunityID, company, city, start_date, end_date, position, description FROM $TableName";
 
     $QueryResult = @mysqli_query($DBConnect, $SQLString);
 
-    if(mysqli_num_rows($queryResult) > 0)
+    if(mysqli_num_rows($QueryResult) > 0)
     {
-        while(($Row = mysqli_fetch_assoc($queryResult)) !== FALSE)
-        $Opportunities[] = $Row;
-        mysqli_free_result($queryResult);
+        while(($Row = mysqli_fetch_assoc($QueryResult)))
+            $Opportunities[] = $Row;
+        mysqli_free_result($QueryResult);
     }
     mysqli_close($DBConnect);
 
