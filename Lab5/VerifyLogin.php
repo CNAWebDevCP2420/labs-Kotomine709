@@ -6,26 +6,24 @@
 <?php
 
     //Connect to database
-    if($errors == 0)
-    {
-        $DBConnect = @mysqli_connect("localhost", "root", "");
+    $DBConnect = @mysqli_connect("localhost", "root", "");
 
-        if($DBConnect === false)
+    $errors = 0;
+    if($DBConnect === false)
+    {
+        echo "<p>Unable to connect to database server</p>";
+        echo "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>\n";
+        ++$errors;
+    }
+    else
+    {
+        $DBName = "internships";
+        $result = @mysqli_select_db($DBName, $DBConnect);
+        if($result === false)
         {
-            echo "<p>Unable to connect to database server</p>";
+            echo "<p>Unable to connect to database</p>";
             echo "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>\n";
             ++$errors;
-        }
-        else
-        {
-            $DBName = "internships";
-            $result = @mysqli_select_db($DBName, $DBConnect);
-            if($result === false)
-            {
-                echo "<p>Unable to connect to database</p>";
-                echo "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>\n";
-                ++$errors;
-            }
         }
     }
 
@@ -51,7 +49,7 @@
     }
 
     //Errors prevented verification, tell user
-    if($errors >0)
+    if($errors  >0)
     {
         echo "<p>Please use your browsers back button to return and fix the indicated errors.</p>\n";
     }

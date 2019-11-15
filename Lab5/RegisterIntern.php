@@ -146,7 +146,7 @@
         echo "Your new intern ID is <strong>" . $InternID . "</strong>.</p>\n";
     }
 
-    //Saves info to an invisible input so it's passed to the next page
+    //Saves info to an invisible input so it's passed to the next page if you press the submit button
     if($errors == 0)
     {
         echo "<form method='post' action='AvailableOpportunities.php>\n' ";
