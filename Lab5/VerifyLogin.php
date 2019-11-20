@@ -57,9 +57,11 @@
     //Saves info to an invisible input so it's passed to the next page
     if($errors == 0)
     {
-        echo "<form method='post' action='AvailableOpportunities.php>\n' ";
-        echo "<input type='hidden' name='interID' value='$InternID'>\n ";
-        echo "<input type='submit' name='submit' value='View available opportunities'>\n ";
-        echo "</form>";
+        // echo "<form method='post' action='AvailableOpportunities.php>\n' ";
+        // echo "<input type='hidden' name='interID' value='$InternID'>\n ";
+        // echo "<input type='submit' name='submit' value='View available opportunities'>\n ";
+        // echo "</form>";
+
+        echo "<p><a href='AvailableOpportunities.php?internID=$InternID'>Available Opportunities</a></p>\n";
     }
 ?>
