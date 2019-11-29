@@ -16,7 +16,7 @@
         else
         {
             $DBName = "guestbook";
-            if(!@mysqli_select_db($DBName, $DBConnect))
+            if(!@mysqli_select_db($DBConnect, $DBName))
             {
                 $SQLString = "CREATE DATABASE $DBName";
                 $queryResult = mysqli_execute($SQLString, $DBConnect);
