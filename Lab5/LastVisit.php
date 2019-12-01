@@ -6,7 +6,7 @@
 
         if(isset($_COOKIE['lastVisit']))
         {
-            $LastVisit = "<p>Your last visit was on " . $_COOKIE['lastVisit'] . "</p>"
+            $LastVisit = "<p>Your last visit was on " . $_COOKIE['lastVisit'] . "</p>";
         }
         else
         {
