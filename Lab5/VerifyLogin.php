@@ -1,67 +1,63 @@
-<!DOCTYPE html>
-
-<h1>Collage Internship</h1>
-<h2>Verify Intern Login</h2>
-
 <?php
-
-    //Connect to database
-    $DBConnect = @mysqli_connect("localhost", "root", "");
-
-    $errors = 0;
-    if($DBConnect === false)
-    {
-        echo "<p>Unable to connect to database server</p>";
-        echo "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>\n";
-        ++$errors;
-    }
-    else
-    {
-        $DBName = "internships";
-        $result = @mysqli_select_db($DBName, $DBConnect);
-        if($result === false)
-        {
-            echo "<p>Unable to connect to database</p>";
-            echo "<p>Error code " . mysqli_connect_errno() . ": " . mysqli_connect_error() . "</p>\n";
-            ++$errors;
-        }
-    }
-
-    //Run query to see if the data entered matches a table row
-    $TableName = "interns";
-    if($errors == 0)
-    {
-        $SQLString = "SELECT internID, first, last FROM $TableName WHERE email = '" . stripslashes($_POST['email']) . "' AND password_md5 ='" . md5(stripslashes($_POST['password'])) . "'";
-        $queryResult = @mysqli_query($DBConnect, $SQLString);
-
-        if(mysqli_num_rows($queryResult) == 0)
-        {
-            echo "<p>The email address / password entered is not valid</p>\n";
-            ++$errors;
-        }
-        else
-        {
-            $Row = mysqli_fetch_assoc($queryResult);
-            $InternID = $Row['internID'];
-            $InternName = $Row['first'] . " " . $Row['last'];
-            echo "<p>Welcome back, $InternName</p>\n";
-        }
-    }
-
-    //Errors prevented verification, tell user
-    if($errors  >0)
-    {
-        echo "<p>Please use your browsers back button to return and fix the indicated errors.</p>\n";
-    }
-
-    //Saves info to an invisible input so it's passed to the next page
-    if($errors == 0)
-    {
-        // echo "<form method='post' action='AvailableOpportunities.php>\n' ";
-        // echo "<input type='hidden' name='interID' value='$InternID'>\n ";
-        // echo "<input type='submit' name='submit' value='View available opportunities'>\n ";
-        // echo "</form>";
-
-        echo "<p><a href='AvailableOpportunities.php?internID=$InternID'>Available Opportunities</a></p>\n";
-    }
+session_start();
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Verify Intern Login</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+</head>
+<body>
+<h1>College Internship</h1>
+<h2>Verify Intern Login</h2>
+<?php
+$errors = 0;
+$DBConnect = @mysql_connect("host", "user", "password");
+if ($DBConnect === FALSE) {
+     echo "<p>Unable to connect to the database server. " .
+          "Error code " . mysql_errno() . ": " .
+          mysql_error() . "</p>\n";
+     ++$errors;
+} 
+else {
+     $DBName = "internships";
+     $result = @mysql_select_db($DBName, $DBConnect);
+     if ($result === FALSE) {
+          echo "<p>Unable to select the database. " .
+               "Error code " . mysql_errno($DBConnect) . 
+               ": " . mysql_error($DBConnect) . "</p>\n";
+          ++$errors;
+     }
+}
+$TableName = "interns";
+if ($errors == 0) {
+     $SQLstring = "SELECT internID, first, last FROM $TableName "
+          . " where email='" . stripslashes($_POST['email']) . 
+          "' and password_md5='" . 
+          md5(stripslashes($_POST['password'])) . "'";
+     $QueryResult = @mysql_query($SQLstring, $DBConnect);
+     if (mysql_num_rows($QueryResult)==0) {
+          echo "<p>The email address/password " . 
+               " combination entered is not valid.</p>\n";
+          ++$errors;
+     }
+     else {
+          $Row = mysql_fetch_assoc($QueryResult);
+          $_SESSION['internID'] = $Row['internID'];
+          $InternName = $Row['first'] . " " . $Row['last'];
+          echo "<p>Welcome back, $InternName!</p>\n";     }
+}
+if ($errors > 0) {
+     echo "<p>Please use your browser's BACK button to return " .
+          " to the form and fix the errors indicated.</p>\n";
+}
+if ($errors == 0) {
+echo "<p><a href='AvailableOpportunities.php?" .
+          SID . "'>Available Opportunities</a></p>\n";
+}
+
+?>
+</body>
+</html>
+
